@@ -2,7 +2,6 @@ package encoding
 
 import (
 	"context"
-	"io"
 	"net"
 
 	"github.com/xtls/xray-core/common/buf"
@@ -10,8 +9,8 @@ import (
 )
 
 type HunkConn interface {
-	Send(*Hunk) error
-	Recv() (*Hunk, error)
+	Send(*MultiHunk) error
+	Recv() (*MultiHunk, error)
 	SendMsg(m interface{}) error
 	RecvMsg(m interface{}) error
 }
@@ -24,19 +23,19 @@ type HunkReaderWriter struct {
 	hc     HunkConn
 	cancel context.CancelFunc
 
-	buf   []byte
+	buf   [][]byte
 	index int
 }
 
-func NewHunkReadWriter(hc HunkConn, cancel context.CancelFunc) io.ReadWriteCloser {
-	return &HunkReaderWriter{hc, cancel, make([]byte, 0, 2*buf.Size), 0}
+func NewHunkReadWriter(hc HunkConn, cancel context.CancelFunc) *HunkReaderWriter {
+	return &HunkReaderWriter{hc, cancel, nil, 0}
 }
 
 func NewHunkConn(hc HunkConn, cancel context.CancelFunc) net.Conn {
 	wrc := NewHunkReadWriter(hc, cancel)
 	return cnc.NewConnection(
-		cnc.ConnectionInput(wrc),
-		cnc.ConnectionOutput(wrc),
+		cnc.ConnectionInputMulti(wrc),
+		cnc.ConnectionOutputMulti(wrc),
 		cnc.ConnectionOnClose(wrc),
 	)
 }
@@ -53,45 +52,41 @@ func (h *HunkReaderWriter) forceFetch() error {
 	return nil
 }
 
-func (h *HunkReaderWriter) Read(buf []byte) (int, error) {
-	if h.index >= len(h.buf) {
-		if err := h.forceFetch(); err != nil {
-			return 0, err
-		}
-	}
-	n := copy(buf, h.buf[h.index:])
-	h.index += n
-
-	return n, nil
-}
-
 func (h *HunkReaderWriter) ReadMultiBuffer() (buf.MultiBuffer, error) {
-	if h.index >= len(h.buf) {
-		if err := h.forceFetch(); err != nil {
-			return nil, err
-		}
-	}
-
-	if cap(h.buf) == buf.Size {
-		b := h.buf
-		h.index = len(h.buf)
-		return buf.MultiBuffer{buf.NewExisted(b)}, nil
-	}
-
-	b := buf.New()
-	_, err := b.ReadFrom(h)
-	if err != nil {
+	if err := h.forceFetch(); err != nil {
 		return nil, err
 	}
-	return buf.MultiBuffer{b}, nil
+
+	var mb = make(buf.MultiBuffer, 0, len(h.buf))
+	for _, b := range h.buf {
+		if cap(b) >= buf.Size {
+			h.index = len(h.buf)
+			mb = append(mb, buf.NewExisted(b))
+			h.index++
+			continue
+		}
+
+		nb := buf.New()
+		nb.Extend(int32(len(b)))
+		copy(nb.Bytes(), b)
+
+		mb = append(mb, nb)
+	}
+	return mb, nil
 }
 
-func (h *HunkReaderWriter) Write(buf []byte) (int, error) {
-	err := h.hc.Send(&Hunk{Data: buf[:]})
-	if err != nil {
-		return 0, newError("failed to send data over gRPC tunnel").Base(err)
+func (h *HunkReaderWriter) WriteMultiBuffer(mb buf.MultiBuffer) error {
+	defer buf.ReleaseMulti(mb)
+	hunk := &MultiHunk{Data: make([][]byte, len(mb))}
+	for _, b := range mb {
+		hunk.Data = append(hunk.Data, b.Bytes())
 	}
-	return len(buf), nil
+
+	err := h.hc.Send(hunk)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (h *HunkReaderWriter) Close() error {

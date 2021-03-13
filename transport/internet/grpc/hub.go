@@ -25,7 +25,8 @@ type Listener struct {
 	s *grpc.Server
 }
 
-func (l Listener) Tun(server encoding.GRPCService_TunServer) error {
+func (l Listener) Tun(server encoding.GRPCService_TunServer) error { return nil }
+func (l Listener) TunMulti(server encoding.GRPCService_TunMultiServer) error {
 	tunCtx, cancel := context.WithCancel(l.ctx)
 	l.handler(encoding.NewHunkConn(server, cancel))
 	<-tunCtx.Done()
