@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	auth "github.com/xtls/xray-core/auth/vmess"
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/buf"
 	"github.com/xtls/xray-core/common/errors"
@@ -155,29 +156,32 @@ func (*Handler) Network() []net.Network {
 }
 
 func (h *Handler) GetUser(email string) *protocol.MemoryUser {
-	user, existing := h.usersByEmail.Get(email)
-	if !existing {
-		h.clients.Add(user)
-	}
-	return user
+	return auth.GetUser(email)
+	//user, existing := h.usersByEmail.Get(email)
+	//if !existing {
+	//	h.clients.Add(user)
+	//}
+	//return user
 }
 
 func (h *Handler) AddUser(ctx context.Context, user *protocol.MemoryUser) error {
-	if len(user.Email) > 0 && !h.usersByEmail.Add(user) {
-		return newError("User ", user.Email, " already exists.")
-	}
-	return h.clients.Add(user)
+	panic("should not be called")
+	//if len(user.Email) > 0 && !h.usersByEmail.Add(user) {
+	//	return newError("User ", user.Email, " already exists.")
+	//}
+	//return h.clients.Add(user)
 }
 
 func (h *Handler) RemoveUser(ctx context.Context, email string) error {
-	if email == "" {
-		return newError("Email must not be empty.")
-	}
-	if !h.usersByEmail.Remove(email) {
-		return newError("User ", email, " not found.")
-	}
-	h.clients.Remove(email)
-	return nil
+	panic("should not be called")
+	//if email == "" {
+	//	return newError("Email must not be empty.")
+	//}
+	//if !h.usersByEmail.Remove(email) {
+	//	return newError("User ", email, " not found.")
+	//}
+	//h.clients.Remove(email)
+	//return nil
 }
 
 func transferResponse(timer signal.ActivityUpdater, session *encoding.ServerSession, request *protocol.RequestHeader, response *protocol.ResponseHeader, input buf.Reader, output *buf.BufferedWriter) error {

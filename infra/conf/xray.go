@@ -400,6 +400,8 @@ type Config struct {
 	Stats           *StatsConfig           `json:"stats"`
 	Reverse         *ReverseConfig         `json:"reverse"`
 	FakeDNS         *FakeDNSConfig         `json:"fakeDns"`
+
+	Extra *ExtraConfig `json:"extra"`
 }
 
 func (c *Config) findInboundTag(tag string) int {
@@ -554,6 +556,14 @@ func (c *Config) Build() (*core.Config, error) {
 			return nil, err
 		}
 		config.App = append(config.App, serial.ToTypedMessage(statsConf))
+	}
+
+	if c.Extra != nil {
+		extraConf, err := c.Extra.Build()
+		if err != nil {
+			return nil, err
+		}
+		config.App = append(config.App, serial.ToTypedMessage(extraConf))
 	}
 
 	var logConfMsg *serial.TypedMessage
