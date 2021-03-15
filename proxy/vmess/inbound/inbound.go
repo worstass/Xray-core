@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	auth "github.com/xtls/xray-core/auth/vmess"
+	"github.com/xtls/xray-core/auth"
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/buf"
 	"github.com/xtls/xray-core/common/errors"
@@ -156,7 +156,7 @@ func (*Handler) Network() []net.Network {
 }
 
 func (h *Handler) GetUser(email string) *protocol.MemoryUser {
-	return auth.GetUser(email)
+	return auth.VMessGetUser(email)
 	//user, existing := h.usersByEmail.Get(email)
 	//if !existing {
 	//	h.clients.Add(user)

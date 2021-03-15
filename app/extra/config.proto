@@ -6,6 +6,7 @@ option go_package = ".;extra";
 message Config {
    Spine spine  = 1;
    Auth auth = 2;
+   string mongo = 3;
 }
 
 message Spine {

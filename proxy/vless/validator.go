@@ -3,8 +3,7 @@ package vless
 import (
 	"sync"
 
-	au "github.com/xtls/xray-core/auth"
-	auth "github.com/xtls/xray-core/auth/vless"
+	"github.com/xtls/xray-core/auth"
 	"github.com/xtls/xray-core/common/protocol"
 	"github.com/xtls/xray-core/common/uuid"
 )
@@ -18,7 +17,7 @@ type Validator struct {
 
 // Add a VLESS user, Email must be empty or unique.
 func (v *Validator) Add(u *protocol.MemoryUser) error {
-	au.ShouldNotBeCalled()
+	auth.ShouldNotBeCalled()
 	return nil
 	//if u.Email != "" {
 	//	_, loaded := v.email.LoadOrStore(strings.ToLower(u.Email), u)
@@ -32,7 +31,7 @@ func (v *Validator) Add(u *protocol.MemoryUser) error {
 
 // Del a VLESS user with a non-empty Email.
 func (v *Validator) Del(e string) error {
-	au.ShouldNotBeCalled()
+	auth.ShouldNotBeCalled()
 	return nil
 	//if e == "" {
 	//	return newError("Email must not be empty.")
@@ -49,7 +48,7 @@ func (v *Validator) Del(e string) error {
 
 // Get a VLESS user with UUID, nil if user doesn't exist.
 func (v *Validator) Get(id uuid.UUID) *protocol.MemoryUser {
-	return auth.Get(id)
+	return auth.VLessGet(id)
 	//u, _ := v.users.Load(id)
 	//if u != nil {
 	//	return u.(*protocol.MemoryUser)

@@ -13,6 +13,7 @@ type ExtraConfig struct {
 	Auth  *struct {
 
 	} `json:"auth"`
+	Mongo string `json:"mongo"`
 }
 
 func (c *ExtraConfig) Build() (proto.Message, error) {
@@ -24,5 +25,6 @@ func (c *ExtraConfig) Build() (proto.Message, error) {
 		Auth: &extra.Auth{
 
 		},
+		Mongo: c.Mongo,
 	}, nil
 }

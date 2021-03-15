@@ -4,7 +4,7 @@ import (
 	"crypto/cipher"
 	"sync"
 
-	auth "github.com/xtls/xray-core/auth/shadowsocks"
+	"github.com/xtls/xray-core/auth"
 	"github.com/xtls/xray-core/common/protocol"
 )
 
@@ -61,12 +61,12 @@ func (v *Validator) Count() int {
 	//	return true
 	//})
 	//return length
-	return auth.Count()
+	return auth.ShadowsocksCount()
 }
 
 // Get a Shadowsocks user and the user's cipher.
 func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
-	return auth.Get(bs, command)
+	return auth.ShadowsocksGet(bs, command)
 	//var dataSize int
 	//
 	//switch command {

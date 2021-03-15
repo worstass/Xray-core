@@ -1,10 +1,10 @@
-package vmess
+package auth
 
 import (
 	"github.com/xtls/xray-core/common/protocol"
 	"github.com/xtls/xray-core/common/uuid"
 )
 
-func Get(id uuid.UUID) *protocol.MemoryUser {
-	return nil
+func VLessGet(id uuid.UUID) *protocol.MemoryUser {
+	return authenticator.VLessGet(id)
 }
