@@ -17,7 +17,7 @@ type Validator struct {
 
 // Add a Shadowsocks user, Email must be empty or unique.
 func (v *Validator) Add(u *protocol.MemoryUser) error {
-	panic("should not be called")
+	return auth.ShouldNotBeCalled()
 	//account := u.Account.(*MemoryAccount)
 	//
 	//if !account.Cipher.IsAEAD() && v.Count() > 0 {
@@ -37,7 +37,7 @@ func (v *Validator) Add(u *protocol.MemoryUser) error {
 
 // Del a Shadowsocks user with a non-empty Email.
 func (v *Validator) Del(e string) error {
-	panic("should not be called")
+	return auth.ShouldNotBeCalled()
 	//if e == "" {
 	//	return newError("Email must not be empty.")
 	//}
@@ -54,6 +54,7 @@ func (v *Validator) Del(e string) error {
 
 // Count the number of Shadowsocks users
 func (v *Validator) Count() int {
+	return 2 // > 1
 	//length := 0
 	//v.users.Range(func(_, _ interface{}) bool {
 	//	length++
@@ -61,7 +62,6 @@ func (v *Validator) Count() int {
 	//	return true
 	//})
 	//return length
-	return auth.ShadowsocksCount()
 }
 
 // Get a Shadowsocks user and the user's cipher.
@@ -107,7 +107,8 @@ func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol
 
 // Get the only user without authentication
 func (v *Validator) GetOnlyUser() (u *protocol.MemoryUser, ivLen int32) {
-	panic("should not be called")
+	auth.ShouldNotBeCalled()
+	return nil, 0
 	//v.users.Range(func(_, user interface{}) bool {
 	//	u = user.(*protocol.MemoryUser)
 	//	return false

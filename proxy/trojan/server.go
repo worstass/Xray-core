@@ -9,7 +9,6 @@ import (
 	"syscall"
 	"time"
 
-	auth "github.com/xtls/xray-core/auth"
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/buf"
 	"github.com/xtls/xray-core/common/errors"
@@ -188,8 +187,7 @@ func (s *Server) Process(ctx context.Context, network net.Network, conn internet
 
 		shouldFallback = true
 	} else {
-		//user = s.validator.Get(hexString(first.BytesTo(56)))
-		user = auth.TrojanGet(hexString(first.BytesTo(56)))
+		user = s.validator.Get(hexString(first.BytesTo(56)))
 		if user == nil {
 			// invalid user, let's fallback
 			err = newError("not a valid user")

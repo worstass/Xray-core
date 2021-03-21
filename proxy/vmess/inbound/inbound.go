@@ -165,7 +165,7 @@ func (h *Handler) GetUser(email string) *protocol.MemoryUser {
 }
 
 func (h *Handler) AddUser(ctx context.Context, user *protocol.MemoryUser) error {
-	panic("should not be called")
+	return auth.ShouldNotBeCalled()
 	//if len(user.Email) > 0 && !h.usersByEmail.Add(user) {
 	//	return newError("User ", user.Email, " already exists.")
 	//}
@@ -173,7 +173,7 @@ func (h *Handler) AddUser(ctx context.Context, user *protocol.MemoryUser) error 
 }
 
 func (h *Handler) RemoveUser(ctx context.Context, email string) error {
-	panic("should not be called")
+	return auth.ShouldNotBeCalled()
 	//if email == "" {
 	//	return newError("Email must not be empty.")
 	//}
