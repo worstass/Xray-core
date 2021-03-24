@@ -8,6 +8,7 @@ import (
 
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/log"
+	"github.com/xtls/xray-core/app/extra/loghook"
 )
 
 // Instance is a log.Handler that handles logs.
@@ -104,14 +105,17 @@ func (g *Instance) Handle(msg log.Message) {
 	case *log.AccessMessage:
 		if g.accessLogger != nil {
 			g.accessLogger.Handle(msg)
+			loghook.HandleAccessMessage(msg)
 		}
 	case *log.DNSLog:
 		if g.dns && g.accessLogger != nil {
 			g.accessLogger.Handle(msg)
+			loghook.HandleDNSLog(msg)
 		}
 	case *log.GeneralMessage:
 		if g.errorLogger != nil && msg.Severity <= g.config.ErrorLogLevel {
 			g.errorLogger.Handle(msg)
+			loghook.HandleGeneralMessage(msg)
 		}
 	default:
 		// Swallow
