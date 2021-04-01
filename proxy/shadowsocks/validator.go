@@ -4,7 +4,7 @@ import (
 	"crypto/cipher"
 	"sync"
 
-	"github.com/xtls/xray-core/auth"
+	"github.com/xtls/xray-core/app/extra/auth"
 	"github.com/xtls/xray-core/common/protocol"
 )
 

@@ -4,15 +4,23 @@ package xray.app.extra;
 option go_package = ".;extra";
 
 message Config {
-   Spine spine  = 1;
-   Auth auth = 2;
-   string mongo = 3;
+  string domain = 1;
+  Spine spine = 2;
+  Prometheus prometheus = 3;
+  Consul consul = 4;
+}
+
+message Prometheus {
+  string host = 1;
+  int32 port = 2;
+}
+
+message Consul {
+  string host = 1;
+  int32 port = 2;
 }
 
 message Spine {
-   string host = 1;
-   int32 port = 2;
-}
-message Auth {
-
+  string host = 1;
+  int32 port = 2;
 }

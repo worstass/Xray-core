@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/xtls/xray-core/auth"
+	"github.com/xtls/xray-core/app/extra/auth"
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/buf"
 	"github.com/xtls/xray-core/common/errors"

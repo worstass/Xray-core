@@ -3,7 +3,7 @@ package vless
 import (
 	"sync"
 
-	"github.com/xtls/xray-core/auth"
+	"github.com/xtls/xray-core/app/extra/auth"
 	"github.com/xtls/xray-core/common/protocol"
 	"github.com/xtls/xray-core/common/uuid"
 )

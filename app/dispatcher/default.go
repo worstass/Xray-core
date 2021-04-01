@@ -23,6 +23,7 @@ import (
 	"github.com/xtls/xray-core/features/stats"
 	"github.com/xtls/xray-core/transport"
 	"github.com/xtls/xray-core/transport/pipe"
+	"github.com/xtls/xray-core/app/extra/limit"
 )
 
 var (
@@ -171,6 +172,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 				}
 			}
 		}
+		limit.LimitSpeed(user, inboundLink, outboundLink)
 	}
 
 	return inboundLink, outboundLink

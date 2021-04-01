@@ -1,7 +1,7 @@
 package trojan
 
 import (
-	"github.com/xtls/xray-core/auth"
+	"github.com/xtls/xray-core/app/extra/auth"
 	"sync"
 
 	"github.com/xtls/xray-core/common/protocol"
