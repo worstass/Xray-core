@@ -5,14 +5,17 @@ option go_package = ".;extra";
 
 message Config {
   string domain = 1;
-  Spine spine = 2;
-  Prometheus prometheus = 3;
-  Consul consul = 4;
+  string email = 2;
+  Spine spine = 3;
+  Prometheus prometheus = 4;
+  Consul consul = 5;
+  string fsRoot = 6;
 }
 
 message Prometheus {
   string host = 1;
   int32 port = 2;
+  int32 localPort = 3;
 }
 
 message Consul {

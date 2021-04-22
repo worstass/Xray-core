@@ -6,25 +6,45 @@ import (
 )
 
 type ExtraConfig struct {
+	Domain string `json:"domain"`
+	Email  string `json:"email"`
+	FsRoot string `json:"fsRoot"`
 	Spine  *struct {
 		Host string `json:"host"`
 		Port int32  `json:"port"`
 	} `json:"spine"`
-	Auth  *struct {
-
-	} `json:"auth"`
-	Mongo string `json:"mongo"`
+	Consul *struct {
+		Host string `json:"host"`
+		Port int32  `json:"port"`
+	} `json:"consul"`
+	Prometheus *struct {
+		Host       string `json:"host"`
+		Port       int32  `json:"port"`
+		LocoalPort int32  `json:"localPort"`
+	} `json:"prometheus"`
 }
 
 func (c *ExtraConfig) Build() (proto.Message, error) {
 	return &extra.Config{
+		Domain: c.Domain,
+		Email:  c.Email,
+		FsRoot: c.FsRoot,
 		Spine: &extra.Spine{
 			Host: c.Spine.Host,
 			Port: c.Spine.Port,
 		},
-		Auth: &extra.Auth{
-
+		Consul: &extra.Consul{
+			Host: c.Consul.Host,
+			Port: c.Consul.Port,
 		},
-		Mongo: c.Mongo,
+		Prometheus: &extra.Prometheus{
+			Host:      c.Prometheus.Host,
+			Port:      c.Prometheus.Port,
+			LocalPort: c.Prometheus.LocoalPort,
+		},
+		//Auth: &extra.Auth{
+		//
+		//},
+		//Mongo: c.Mongo,
 	}, nil
 }
