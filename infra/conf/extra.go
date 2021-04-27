@@ -18,9 +18,9 @@ type ExtraConfig struct {
 		Port int32  `json:"port"`
 	} `json:"consul"`
 	Prometheus *struct {
-		Host       string `json:"host"`
-		Port       int32  `json:"port"`
-		LocoalPort int32  `json:"localPort"`
+		Host      string `json:"host"`
+		Port      int32  `json:"port"`
+		LocalPort int32  `json:"localPort"`
 	} `json:"prometheus"`
 }
 
@@ -40,11 +40,7 @@ func (c *ExtraConfig) Build() (proto.Message, error) {
 		Prometheus: &extra.Prometheus{
 			Host:      c.Prometheus.Host,
 			Port:      c.Prometheus.Port,
-			LocalPort: c.Prometheus.LocoalPort,
+			LocalPort: c.Prometheus.LocalPort,
 		},
-		//Auth: &extra.Auth{
-		//
-		//},
-		//Mongo: c.Mongo,
 	}, nil
 }
