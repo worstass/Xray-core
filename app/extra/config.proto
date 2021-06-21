@@ -2,6 +2,10 @@ syntax = "proto3";
 
 package xray.app.extra;
 option go_package = "app/extra";
+//option go_package = "github.com/xtls/xray-core/app/extra";
+option csharp_namespace = "Xray.App.Extra";
+option java_package = "com.xray.app.extra";
+option java_multiple_files = true;
 
 message Config {
   string domain = 1;
