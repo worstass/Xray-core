@@ -156,32 +156,39 @@ func (*Handler) Network() []net.Network {
 }
 
 func (h *Handler) GetUser(email string) *protocol.MemoryUser {
-	return auth.VMessGetUser(email)
-	//user, existing := h.usersByEmail.Get(email)
-	//if !existing {
-	//	h.clients.Add(user)
-	//}
-	//return user
+	if !auth.NoAuthenticator {
+		return auth.VMessGetUser(email)
+	}
+	user, existing := h.usersByEmail.Get(email)
+	if !existing {
+		h.clients.Add(user)
+	}
+	return user
 }
 
 func (h *Handler) AddUser(ctx context.Context, user *protocol.MemoryUser) error {
-	return auth.ShouldNotBeCalled()
-	//if len(user.Email) > 0 && !h.usersByEmail.Add(user) {
-	//	return newError("User ", user.Email, " already exists.")
-	//}
-	//return h.clients.Add(user)
+	if !auth.NoAuthenticator {
+		return auth.ShouldNotBeCalled()
+	}
+
+	if len(user.Email) > 0 && !h.usersByEmail.Add(user) {
+		return newError("User ", user.Email, " already exists.")
+	}
+	return h.clients.Add(user)
 }
 
 func (h *Handler) RemoveUser(ctx context.Context, email string) error {
-	return auth.ShouldNotBeCalled()
-	//if email == "" {
-	//	return newError("Email must not be empty.")
-	//}
-	//if !h.usersByEmail.Remove(email) {
-	//	return newError("User ", email, " not found.")
-	//}
-	//h.clients.Remove(email)
-	//return nil
+	if !auth.NoAuthenticator {
+		return auth.ShouldNotBeCalled()
+	}
+	if email == "" {
+		return newError("Email must not be empty.")
+	}
+	if !h.usersByEmail.Remove(email) {
+		return newError("User ", email, " not found.")
+	}
+	h.clients.Remove(email)
+	return nil
 }
 
 func transferResponse(timer signal.ActivityUpdater, session *encoding.ServerSession, request *protocol.RequestHeader, response *protocol.ResponseHeader, input buf.Reader, output *buf.BufferedWriter) error {

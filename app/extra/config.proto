@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package xray.app.extra;
-option go_package = ".;extra";
+option go_package = "app/extra";
 
 message Config {
   string domain = 1;
@@ -10,6 +10,7 @@ message Config {
   Prometheus prometheus = 4;
   Consul consul = 5;
   string fsRoot = 6;
+  bool authzUseSpine = 7;
 }
 
 message Prometheus {
