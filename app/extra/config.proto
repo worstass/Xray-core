@@ -10,25 +10,27 @@ option java_multiple_files = true;
 message Config {
   string domain = 1;
   string email = 2;
-  Spine spine = 3;
-  Prometheus prometheus = 4;
-  Consul consul = 5;
+//  Spine spine = 3;
+  string spineAddress = 3;
+  string promExporterAddress = 4;
+  string consulAddress = 5;
+//  Consul consul = 5;
   string fsRoot = 6;
   bool authzUseSpine = 7;
 }
 
-message Prometheus {
-  string host = 1;
-  int32 port = 2;
-  int32 localPort = 3;
-}
+//message Prometheus {
+//  string host = 1;
+//  int32 port = 2;
+//  int32 localPort = 3;
+//}
 
-message Consul {
-  string host = 1;
-  int32 port = 2;
-}
-
-message Spine {
-  string host = 1;
-  int32 port = 2;
-}
+//message Consul {
+//  string host = 1;
+//  int32 port = 2;
+//}
+//
+//message Spine {
+//  string host = 1;
+//  int32 port = 2;
+//}
