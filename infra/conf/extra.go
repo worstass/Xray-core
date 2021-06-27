@@ -12,7 +12,7 @@ type ExtraConfig struct {
 	SpineAddress string `json:"spineAddress"`
 	ConsulAddress string `json:"consulAddress"`
 	PromExporterAddress string `json:"promExporterAddress"`
-	AuthUseSpine bool `json:"authUseSpine"`
+	Authenticator string `json:"authenticator"`
 }
 
 func (c *ExtraConfig) Build() (proto.Message, error) {
@@ -22,15 +22,7 @@ func (c *ExtraConfig) Build() (proto.Message, error) {
 		FsRoot: c.FsRoot,
 		SpineAddress: c.SpineAddress,
 		ConsulAddress: c.ConsulAddress,
-		//Spine: &extra.Spine{
-		//	Host: c.Spine.Host,
-		//	Port: c.Spine.Port,
-		//},
-		//Consul: &extra.Consul{
-		//	Host: c.Consul.Host,
-		//	Port: c.Consul.Port,
-		//},
 		PromExporterAddress: c.PromExporterAddress,
-		AuthzUseSpine: c.AuthUseSpine,
+		Authenticator: c.Authenticator,
 	}, nil
 }
