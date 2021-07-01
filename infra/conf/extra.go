@@ -8,7 +8,7 @@ import (
 type ExtraConfig struct {
 	Domain string `json:"domain"`
 	Email  string `json:"email"`
-	FsRoot string `json:"fsRoot"`
+	FallbackContentPath string `json:"fallbackContentPath"`
 	SpineAddress string `json:"spineAddress"`
 	ConsulAddress string `json:"consulAddress"`
 	PromExporterAddress string `json:"promExporterAddress"`
@@ -19,7 +19,7 @@ func (c *ExtraConfig) Build() (proto.Message, error) {
 	return &extra.Config{
 		Domain: c.Domain,
 		Email:  c.Email,
-		FsRoot: c.FsRoot,
+		FallbackContentPath: c.FallbackContentPath,
 		SpineAddress: c.SpineAddress,
 		ConsulAddress: c.ConsulAddress,
 		PromExporterAddress: c.PromExporterAddress,
