@@ -13,6 +13,6 @@ message Config {
   string spineAddress = 3;
   string promExporterAddress = 4;
   string consulAddress = 5;
-  string fsRoot = 6;
+  string fallbackContentPath = 6;
   string authenticator = 7;
 }
