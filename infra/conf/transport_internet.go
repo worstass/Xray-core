@@ -2,7 +2,9 @@ package conf
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/caddyserver/certmagic"
+	"github.com/xtls/xray-core/app/extra"
 	"math"
 	"net/url"
 	"strconv"
@@ -314,9 +316,13 @@ func (c *TLSCertConfig) Build() (*tls.Certificate, error) {
 func (c *TLSCertConfig) TryBuildFromCertMagic(domain string) (*tls.Certificate, error) {
 	certificate := new(tls.Certificate)
 
+	err := extra.PrepareCertForDomains([]string{domain})
+	if err != nil {
+		return nil, newError(fmt.Sprintf("failed to get cert from certmagic for %s", domain)).Base(err)
+	}
 	cert, err := certmagic.Default.CacheManagedCertificate(domain)
 	if err != nil {
-		return nil, newError("failed to get cert from certmagic").Base(err)
+		return nil, newError("failed to load cert from certmagic storage").Base(err)
 	}
 	certificate.Certificate = cert.Certificate.Leaf.Raw
 	certificate.CertificatePath = ""
