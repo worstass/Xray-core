@@ -16,29 +16,29 @@ type Authenticator interface {
 	ShadowsocksGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error)
 }
 
-//type NullAuthenticator struct {}
-//
-//func (a *NullAuthenticator) ShadowsocksGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
-//	return nil, nil, nil, 0, err
-//}
-//
-//func (a *NullAuthenticator) VMessGetUser(email string) *protocol.MemoryUser {
-//	return nil
-//}
-//
-//func (a *NullAuthenticator) VLessGet(id uuid.UUID) *protocol.MemoryUser {
-//	return nil
-//}
-//
-//func (a *NullAuthenticator) TrojanGet(hash string)  *protocol.MemoryUser {
-//	return nil
-//}
+type NullAuthenticator struct {}
 
-var authenticator Authenticator //= &NullAuthenticator{}
+func (a *NullAuthenticator) ShadowsocksGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
+	return nil, nil, nil, 0, err
+}
+
+func (a *NullAuthenticator) VMessGetUser(email string) *protocol.MemoryUser {
+	return nil
+}
+
+func (a *NullAuthenticator) VLessGet(id uuid.UUID) *protocol.MemoryUser {
+	return nil
+}
+
+func (a *NullAuthenticator) TrojanGet(hash string)  *protocol.MemoryUser {
+	return nil
+}
+
+var authenticator Authenticator = &NullAuthenticator{}
 
 func SetAuthenticator(a Authenticator)  {
 	authenticator = a
-	NoAuthenticator = false
+	//NoAuthenticator = false
 }
 
 type errPathObjHolder struct{}

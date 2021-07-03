@@ -2,6 +2,9 @@ package conf
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/caddyserver/certmagic"
+	"github.com/xtls/xray-core/app/extra"
 	"math"
 	"net/url"
 	"strconv"
@@ -310,6 +313,41 @@ func (c *TLSCertConfig) Build() (*tls.Certificate, error) {
 	return certificate, nil
 }
 
+func (c *TLSCertConfig) TryBuildFromCertMagic(domain string) (*tls.Certificate, error) {
+	certificate := new(tls.Certificate)
+
+	err := extra.PrepareCertForDomains([]string{domain})
+	if err != nil {
+		return nil, newError(fmt.Sprintf("failed to get cert from certmagic for %s", domain)).Base(err)
+	}
+	cert, err := certmagic.Default.CacheManagedCertificate(domain)
+	if err != nil {
+		return nil, newError("failed to load cert from certmagic storage").Base(err)
+	}
+	certificate.Certificate = cert.Certificate.Leaf.Raw
+	certificate.CertificatePath = ""
+	//certificate.Key = cert.PrivateKey
+	//certificate.KeyPath =
+	switch strings.ToLower(c.Usage) {
+	case "encipherment":
+		certificate.Usage = tls.Certificate_ENCIPHERMENT
+	case "verify":
+		certificate.Usage = tls.Certificate_AUTHORITY_VERIFY
+	case "issue":
+		certificate.Usage = tls.Certificate_AUTHORITY_ISSUE
+	default:
+		certificate.Usage = tls.Certificate_ENCIPHERMENT
+	}
+	if certificate.KeyPath == "" && certificate.CertificatePath == "" {
+		certificate.OneTimeLoading = true
+	} else {
+		certificate.OneTimeLoading = c.OneTimeLoading
+	}
+	certificate.OcspStapling = c.OcspStapling
+
+	return certificate, nil
+}
+
 type TLSConfig struct {
 	Insecure                 bool             `json:"allowInsecure"`
 	Certs                    []*TLSCertConfig `json:"certificates"`
@@ -331,7 +369,12 @@ func (c *TLSConfig) Build() (proto.Message, error) {
 	for idx, certConf := range c.Certs {
 		cert, err := certConf.Build()
 		if err != nil {
-			return nil, err
+			cc, e := certConf.TryBuildFromCertMagic(c.ServerName)
+			if e != nil {
+				return nil, e
+			} else {
+				cert = cc
+			}
 		}
 		config.Certificate[idx] = cert
 	}

@@ -18,9 +18,9 @@ type Validator struct {
 
 // Add a Shadowsocks user, Email must be empty or unique.
 func (v *Validator) Add(u *protocol.MemoryUser) error {
-	if !auth.NoAuthenticator {
-		return auth.ShouldNotBeCalled()
-	}
+	//if !auth.NoAuthenticator {
+	//	return auth.ShouldNotBeCalled()
+	//}
 
 	account := u.Account.(*MemoryAccount)
 
@@ -41,9 +41,9 @@ func (v *Validator) Add(u *protocol.MemoryUser) error {
 
 // Del a Shadowsocks user with a non-empty Email.
 func (v *Validator) Del(e string) error {
-	if !auth.NoAuthenticator {
-		return auth.ShouldNotBeCalled()
-	}
+	//if !auth.NoAuthenticator {
+	//	return auth.ShouldNotBeCalled()
+	//}
 
 	if e == "" {
 		return newError("Email must not be empty.")
@@ -61,9 +61,9 @@ func (v *Validator) Del(e string) error {
 
 // Count the number of Shadowsocks users
 func (v *Validator) Count() int {
-	if !auth.NoAuthenticator {
-		return 2 // > 1
-	}
+	//if !auth.NoAuthenticator {
+	//	return 2 // > 1
+	//}
 
 	length := 0
 	v.users.Range(func(_, _ interface{}) bool {
@@ -76,10 +76,13 @@ func (v *Validator) Count() int {
 
 // Get a Shadowsocks user and the user's cipher.
 func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
-	if !auth.NoAuthenticator {
-		return auth.ShadowsocksGet(bs, command)
+	//if !auth.NoAuthenticator {
+	//	return auth.ShadowsocksGet(bs, command)
+	//}
+	u, aead, ret, ivLen, err = auth.ShadowsocksGet(bs, command)
+	if u != nil {
+		return
 	}
-
 	var dataSize int
 
 	switch command {
@@ -120,10 +123,10 @@ func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol
 
 // Get the only user without authentication
 func (v *Validator) GetOnlyUser() (u *protocol.MemoryUser, ivLen int32) {
-	if !auth.NoAuthenticator {
-		auth.ShouldNotBeCalled()
-		return nil, 0
-	}
+	//if !auth.NoAuthenticator {
+	//	auth.ShouldNotBeCalled()
+	//	return nil, 0
+	//}
 
 	v.users.Range(func(_, user interface{}) bool {
 		u = user.(*protocol.MemoryUser)
