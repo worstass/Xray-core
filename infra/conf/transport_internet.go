@@ -314,7 +314,7 @@ func (c *TLSCertConfig) Build() (*tls.Certificate, error) {
 	return certificate, nil
 }
 
-func CreateCertFromFromCertMagic(domain string)(*tls.Certificate, error) {
+func CreateCertFromFromCertMagic(domain string) (*tls.Certificate, error) {
 	certificate := new(tls.Certificate)
 	cmConfig := certmagic.Default
 	err := extra.PrepareCertForDomains([]string{domain}, false)
@@ -333,51 +333,7 @@ func CreateCertFromFromCertMagic(domain string)(*tls.Certificate, error) {
 	certificate.Key = k
 	certificate.Usage = tls.Certificate_ENCIPHERMENT
 	certificate.OneTimeLoading = false
-	certificate.OcspStapling = 30
-	//if certificate.KeyPath == "" && certificate.CertificatePath == "" {
-	//	certificate.OneTimeLoading = true
-	//} else {
-	//	certificate.OneTimeLoading = c.OneTimeLoading
-	//}
-	//certificate.OcspStapling = c.OcspStapling
-
-	return certificate, nil
-}
-
-func (c *TLSCertConfig) TryBuildFromCertMagic(domain string) (*tls.Certificate, error) {
-	certificate := new(tls.Certificate)
-
-	cmConfig := certmagic.Default
-	err := extra.PrepareCertForDomains([]string{domain}, false)
-	if err != nil {
-		return nil, newError(fmt.Sprintf("failed to get cert from certmagic for %s", domain)).Base(err)
-	}
-	cert, err := cmConfig.CacheManagedCertificate(domain)
-	if err != nil {
-		return nil, newError("failed to load cert from certmagic storage").Base(err)
-	}
-	certificate.Certificate = cert.Certificate.Leaf.Raw
-	k, err := extra.PrivateKeyToBytes(cert.PrivateKey)
-	if err != nil {
-		return nil, newError("failed to convert to key from certmagic storage").Base(err)
-	}
-	certificate.Key = k
-	switch strings.ToLower(c.Usage) {
-	case "encipherment":
-		certificate.Usage = tls.Certificate_ENCIPHERMENT
-	case "verify":
-		certificate.Usage = tls.Certificate_AUTHORITY_VERIFY
-	case "issue":
-		certificate.Usage = tls.Certificate_AUTHORITY_ISSUE
-	default:
-		certificate.Usage = tls.Certificate_ENCIPHERMENT
-	}
-	if certificate.KeyPath == "" && certificate.CertificatePath == "" {
-		certificate.OneTimeLoading = true
-	} else {
-		certificate.OneTimeLoading = c.OneTimeLoading
-	}
-	certificate.OcspStapling = c.OcspStapling
+	certificate.OcspStapling = 3600
 
 	return certificate, nil
 }
@@ -403,12 +359,7 @@ func (c *TLSConfig) Build() (proto.Message, error) {
 	for idx, certConf := range c.Certs {
 		cert, err := certConf.Build()
 		if err != nil {
-			cc, e := certConf.TryBuildFromCertMagic(c.ServerName)
-			if e != nil {
-				return nil, e
-			} else {
-				cert = cc
-			}
+			return nil, err
 		}
 		config.Certificate[idx] = cert
 	}
@@ -417,9 +368,9 @@ func (c *TLSConfig) Build() (proto.Message, error) {
 	if len(c.ServerName) > 0 {
 		config.ServerName = serverName
 		if len(config.Certificate) == 0 {
-			cert, err :=CreateCertFromFromCertMagic(serverName)
+			cert, err := CreateCertFromFromCertMagic(serverName)
 			if err == nil {
-				config.Certificate = append(config.Certificate,cert)
+				config.Certificate = append(config.Certificate, cert)
 			}
 		}
 	}
