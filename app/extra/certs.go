@@ -11,6 +11,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/caddyserver/certmagic"
+	"go.uber.org/zap"
 	"net"
 	"net/http"
 	"time"
@@ -51,6 +52,11 @@ func PrepareCertForDomains(domains []string, testing bool) error {
 		certmagic.DefaultACME.CA = certmagic.LetsEncryptProductionCA
 	}
 	cfg := certmagic.NewDefault()
+	logger, err := zap.NewProduction()
+	if err != nil {
+		return err
+	}
+	cfg.Logger = logger
 	plainServer := &http.Server{
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       5 * time.Second,

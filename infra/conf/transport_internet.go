@@ -292,7 +292,8 @@ func (c *TLSCertConfig) Build() (*tls.Certificate, error) {
 		certificate.Key = key
 		certificate.KeyPath = c.KeyFile
 	}
-
+	println(string(certificate.Certificate))
+	println(string(certificate.Key))
 	switch strings.ToLower(c.Usage) {
 	case "encipherment":
 		certificate.Usage = tls.Certificate_ENCIPHERMENT
@@ -309,6 +310,36 @@ func (c *TLSCertConfig) Build() (*tls.Certificate, error) {
 		certificate.OneTimeLoading = c.OneTimeLoading
 	}
 	certificate.OcspStapling = c.OcspStapling
+
+	return certificate, nil
+}
+
+func CreateCertFromFromCertMagic(domain string)(*tls.Certificate, error) {
+	certificate := new(tls.Certificate)
+	cmConfig := certmagic.Default
+	err := extra.PrepareCertForDomains([]string{domain}, false)
+	if err != nil {
+		return nil, newError(fmt.Sprintf("failed to get cert from certmagic for %s", domain)).Base(err)
+	}
+	cert, err := cmConfig.CacheManagedCertificate(domain)
+	if err != nil {
+		return nil, newError("failed to load cert from certmagic storage").Base(err)
+	}
+	certificate.Certificate = cert.Certificate.Leaf.Raw
+	k, err := extra.PrivateKeyToBytes(cert.PrivateKey)
+	if err != nil {
+		return nil, newError("failed to convert to key from certmagic storage").Base(err)
+	}
+	certificate.Key = k
+	certificate.Usage = tls.Certificate_ENCIPHERMENT
+	certificate.OneTimeLoading = false
+	certificate.OcspStapling = 30
+	//if certificate.KeyPath == "" && certificate.CertificatePath == "" {
+	//	certificate.OneTimeLoading = true
+	//} else {
+	//	certificate.OneTimeLoading = c.OneTimeLoading
+	//}
+	//certificate.OcspStapling = c.OcspStapling
 
 	return certificate, nil
 }
@@ -385,6 +416,12 @@ func (c *TLSConfig) Build() (proto.Message, error) {
 	config.AllowInsecure = c.Insecure
 	if len(c.ServerName) > 0 {
 		config.ServerName = serverName
+		if len(config.Certificate) == 0 {
+			cert, err :=CreateCertFromFromCertMagic(serverName)
+			if err == nil {
+				config.Certificate = append(config.Certificate,cert)
+			}
+		}
 	}
 	if c.ALPN != nil && len(*c.ALPN) > 0 {
 		config.NextProtocol = []string(*c.ALPN)

@@ -3,7 +3,7 @@ module github.com/xtls/xray-core
 go 1.16
 
 require (
-	github.com/caddyserver/certmagic v0.14.0 // indirect
+	github.com/caddyserver/certmagic v0.14.0
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32
 	github.com/golang/mock v1.5.0
 	github.com/golang/protobuf v1.5.2
