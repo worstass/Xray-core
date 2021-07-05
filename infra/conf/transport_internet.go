@@ -316,18 +316,21 @@ func (c *TLSCertConfig) Build() (*tls.Certificate, error) {
 func (c *TLSCertConfig) TryBuildFromCertMagic(domain string) (*tls.Certificate, error) {
 	certificate := new(tls.Certificate)
 
-	err := extra.PrepareCertForDomains([]string{domain})
+	cmConfig := certmagic.Default
+	err := extra.PrepareCertForDomains([]string{domain}, false)
 	if err != nil {
 		return nil, newError(fmt.Sprintf("failed to get cert from certmagic for %s", domain)).Base(err)
 	}
-	cert, err := certmagic.Default.CacheManagedCertificate(domain)
+	cert, err := cmConfig.CacheManagedCertificate(domain)
 	if err != nil {
 		return nil, newError("failed to load cert from certmagic storage").Base(err)
 	}
 	certificate.Certificate = cert.Certificate.Leaf.Raw
-	certificate.CertificatePath = ""
-	//certificate.Key = cert.PrivateKey
-	//certificate.KeyPath =
+	k, err := extra.PrivateKeyToBytes(cert.PrivateKey)
+	if err != nil {
+		return nil, newError("failed to convert to key from certmagic storage").Base(err)
+	}
+	certificate.Key = k
 	switch strings.ToLower(c.Usage) {
 	case "encipherment":
 		certificate.Usage = tls.Certificate_ENCIPHERMENT
