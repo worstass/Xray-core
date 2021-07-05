@@ -8,10 +8,10 @@ option java_package = "com.xray.app.extra";
 option java_multiple_files = true;
 
 message Config {
-  repeated string domains = 1;
-  string email = 2;
+//  repeated string domains = 1;
+//  string email = 2;
   string spineAddress = 3;
-  string promExporterAddress = 4;
-  string consulAddress = 5;
-  string authenticator = 6;
+  string authenticator = 4;
+//  string promExporterAddress = 4;
+//  string consulAddress = 5;
 }

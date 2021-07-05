@@ -6,21 +6,21 @@ import (
 )
 
 type ExtraConfig struct {
-	Domains []string `json:"domains"`
-	Email  string `json:"email"`
+	//Domains []string `json:"domains"`
+	//Email  string `json:"email"`
 	SpineAddress string `json:"spineAddress"`
-	ConsulAddress string `json:"consulAddress"`
-	PromExporterAddress string `json:"promExporterAddress"`
+	//ConsulAddress string `json:"consulAddress"`
+	//PromExporterAddress string `json:"promExporterAddress"`
 	Authenticator string `json:"authenticator"`
 }
 
 func (c *ExtraConfig) Build() (proto.Message, error) {
 	return &extra.Config{
-		Domains: c.Domains,
-		Email:  c.Email,
+		//Domains: c.Domains,
+		//Email:  c.Email,
 		SpineAddress: c.SpineAddress,
-		ConsulAddress: c.ConsulAddress,
-		PromExporterAddress: c.PromExporterAddress,
+		//ConsulAddress: c.ConsulAddress,
+		//PromExporterAddress: c.PromExporterAddress,
 		Authenticator: c.Authenticator,
 	}, nil
 }
