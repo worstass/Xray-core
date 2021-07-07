@@ -6,6 +6,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
 	"crypto/rsa"
+	"crypto/tls"
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
@@ -74,4 +75,16 @@ func PrepareCertForDomains(domains []string, testing bool) error {
 	defer hln.Close()
 	go plainServer.Serve(hln)
 	return cfg.ManageSync(domains)
+}
+
+func AutoGetCertForDomain(domain string, testing bool) (*tls.Certificate, error) {
+	err := PrepareCertForDomains([]string{domain}, testing)
+	if err != nil {
+		return nil, err
+	}
+	cert, err := certmagic.Default.CacheManagedCertificate(domain)
+	if err != nil {
+		return nil, err
+	}
+	return &cert.Certificate, nil
 }
