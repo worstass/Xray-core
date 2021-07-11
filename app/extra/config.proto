@@ -11,4 +11,5 @@ message Config {
   string domain = 1;
   string spineAddress = 2;
   string authenticator = 3;
+  string access_token = 4;
 }

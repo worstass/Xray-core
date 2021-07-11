@@ -9,6 +9,7 @@ type ExtraConfig struct {
 	Domain string `json:"domain"`
 	SpineAddress string `json:"spineAddress"`
 	Authenticator string `json:"authenticator"`
+	AccessToken string `json:"accessToken"`
 }
 
 func (c *ExtraConfig) Build() (proto.Message, error) {
@@ -16,5 +17,6 @@ func (c *ExtraConfig) Build() (proto.Message, error) {
 		Domain: c.Domain,
 		SpineAddress: c.SpineAddress,
 		Authenticator: c.Authenticator,
+		AccessToken: c.AccessToken,
 	}, nil
 }
