@@ -18,10 +18,6 @@ type Validator struct {
 
 // Add a VLESS user, Email must be empty or unique.
 func (v *Validator) Add(u *protocol.MemoryUser) error {
-	//if !auth.NoAuthenticator {
-	//	return auth.ShouldNotBeCalled()
-	//}
-
 	if u.Email != "" {
 		_, loaded := v.email.LoadOrStore(strings.ToLower(u.Email), u)
 		if loaded {
@@ -34,10 +30,6 @@ func (v *Validator) Add(u *protocol.MemoryUser) error {
 
 // Del a VLESS user with a non-empty Email.
 func (v *Validator) Del(e string) error {
-	//if !auth.NoAuthenticator {
-	//	return auth.ShouldNotBeCalled()
-	//}
-
 	if e == "" {
 		return newError("Email must not be empty.")
 	}
@@ -53,9 +45,6 @@ func (v *Validator) Del(e string) error {
 
 // Get a VLESS user with UUID, nil if user doesn't exist.
 func (v *Validator) Get(id uuid.UUID) *protocol.MemoryUser {
-	//if !auth.NoAuthenticator {
-	//	return auth.VLessGet(id)
-	//}
 	mu := auth.VLessGet(id)
 	if mu != nil {
 		return mu
