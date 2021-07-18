@@ -44,7 +44,6 @@ func (v *Validator) Del(e string) error {
 
 // Get a trojan user with hashed key, nil if user doesn't exist.
 func (v *Validator) Get(hash string) *protocol.MemoryUser {
-	//return auth.TrojanGet(hash)
 	mu := auth.TrojanGet(hash)
 	if mu != nil {
 		return mu

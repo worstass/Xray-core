@@ -156,9 +156,6 @@ func (*Handler) Network() []net.Network {
 }
 
 func (h *Handler) GetUser(email string) *protocol.MemoryUser {
-	//if !auth.NoAuthenticator {
-	//	return auth.VMessGetUser(email)
-	//}
 	u := auth.VMessGetUser(email)
 	if u != nil {
 		return u
@@ -172,10 +169,6 @@ func (h *Handler) GetUser(email string) *protocol.MemoryUser {
 }
 
 func (h *Handler) AddUser(ctx context.Context, user *protocol.MemoryUser) error {
-	//if !auth.NoAuthenticator {
-	//	return auth.ShouldNotBeCalled()
-	//}
-
 	if len(user.Email) > 0 && !h.usersByEmail.Add(user) {
 		return newError("User ", user.Email, " already exists.")
 	}
@@ -183,9 +176,6 @@ func (h *Handler) AddUser(ctx context.Context, user *protocol.MemoryUser) error 
 }
 
 func (h *Handler) RemoveUser(ctx context.Context, email string) error {
-	//if !auth.NoAuthenticator {
-	//	return auth.ShouldNotBeCalled()
-	//}
 	if email == "" {
 		return newError("Email must not be empty.")
 	}
