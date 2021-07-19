@@ -185,6 +185,7 @@ func (v *TimedUserValidator) GetAEAD(userHash []byte) (*protocol.MemoryUser, boo
 	if mu != nil {
 		return mu, true, e
 	}
+
 	var userHashFL [16]byte
 	copy(userHashFL[:], userHash)
 
