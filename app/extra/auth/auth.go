@@ -1,13 +1,10 @@
 package auth
 
 import (
-	"crypto/cipher"
 	"github.com/xtls/xray-core/common/errors"
 	"github.com/xtls/xray-core/common/protocol"
 	"github.com/xtls/xray-core/common/uuid"
 )
-
-//var NoAuthenticator = true
 
 type Authenticator interface {
 	VLessGet(id uuid.UUID) *protocol.MemoryUser
@@ -15,9 +12,6 @@ type Authenticator interface {
     VMessTimedUserValidatorGet(userHash []byte) (*protocol.MemoryUser, protocol.Timestamp, bool, error)
     VMessTimedUserValidatorGetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error)
 	VMessGetUser(email string) *protocol.MemoryUser
-
-	// Impossible to use
-	ShadowsocksGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error)
 }
 
 type NullAuthenticator struct {}
@@ -28,10 +22,6 @@ func (a *NullAuthenticator) VMessTimedUserValidatorGet(userHash []byte) (*protoc
 
 func (a *NullAuthenticator) VMessTimedUserValidatorGetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error) {
 	return nil, false, nil
-}
-
-func (a *NullAuthenticator) ShadowsocksGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
-	return nil, nil, nil, 0, err
 }
 
 func (a *NullAuthenticator) VMessGetUser(email string) *protocol.MemoryUser {
