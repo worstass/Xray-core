@@ -3,7 +3,6 @@ module github.com/xtls/xray-core
 go 1.17
 
 require (
-	github.com/caddyserver/certmagic v0.14.0
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32
 	github.com/golang/mock v1.6.0
 	github.com/golang/protobuf v1.5.2
@@ -48,4 +47,14 @@ require (
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+)
+
+require (
+	github.com/caddyserver/certmagic v0.15.1 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.6 // indirect
+    github.com/libdns/libdns v0.2.1 // indirect
+    github.com/mholt/acmez v1.0.0 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/zap v1.17.0 // indirect
 )

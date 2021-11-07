@@ -45,10 +45,14 @@ func (v *Validator) Del(e string) error {
 
 // Get a VLESS user with UUID, nil if user doesn't exist.
 func (v *Validator) Get(id uuid.UUID) *protocol.MemoryUser {
-	mu := auth.VLessGet(id)
-	if mu != nil {
-		return mu
+	// BEGIN of extra functionality
+	if auth.ExtraAuthenticationUsed() {
+		mu := auth.VLessGet(id)
+		if mu != nil {
+			return mu
+		}
 	}
+	// END of extra functionality
 
 	u, _ := v.users.Load(id)
 	if u != nil {

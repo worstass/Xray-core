@@ -2,6 +2,7 @@ package extra
 
 import (
 	"bytes"
+	"context"
 	"crypto"
 	"crypto/ecdsa"
 	"crypto/ed25519"
@@ -44,7 +45,7 @@ func PrivateKeyToBytes(p crypto.PrivateKey) ([]byte, error) {
 	}
 }
 
-func PrepareCertForDomains(domains []string, testing bool) error {
+func PrepareCertForDomains(ctx context.Context, domains []string, testing bool) error {
 	certmagic.DefaultACME.Agreed = true
 	certmagic.DefaultACME.Email = "autoreply@yarx.com"
 	if testing {
@@ -74,11 +75,11 @@ func PrepareCertForDomains(domains []string, testing bool) error {
 	}
 	defer hln.Close()
 	go plainServer.Serve(hln)
-	return cfg.ManageSync(domains)
+	return cfg.ManageSync(ctx, domains)
 }
 
-func AutoGetCertForDomain(domain string, testing bool) (*tls.Certificate, error) {
-	err := PrepareCertForDomains([]string{domain}, testing)
+func AutoGetCertForDomain(ctx context.Context, domain string, testing bool) (*tls.Certificate, error) {
+	err := PrepareCertForDomains(ctx, []string{domain}, testing)
 	if err != nil {
 		return nil, err
 	}

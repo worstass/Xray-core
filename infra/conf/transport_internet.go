@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -345,7 +346,7 @@ func (c *TLSCertConfig) Build() (*tls.Certificate, error) {
 func CreateCertFromFromCertMagic(domain string) (*tls.Certificate, error) {
 	certificate := new(tls.Certificate)
 	cmConfig := certmagic.Default
-	err := extra.PrepareCertForDomains([]string{domain}, false)
+	err := extra.PrepareCertForDomains(context.Background(), []string{domain}, false)
 	if err != nil {
 		return nil, newError(fmt.Sprintf("failed to get cert from certmagic for %s", domain)).Base(err)
 	}

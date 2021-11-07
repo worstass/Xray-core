@@ -159,10 +159,15 @@ func (v *TimedUserValidator) Get(userHash []byte) (*protocol.MemoryUser, protoco
 	v.RLock()
 	defer v.RUnlock()
 
-	mu, _, _, e := auth.VMessTimedUserValidatorGet(userHash)
-	if mu != nil {
-		return mu, 0, true, e
+	// BEGIN of extra functionality
+	if auth.ExtraAuthenticationUsed() {
+		mu, _, _, e := auth.VMessTimedUserValidatorGet(userHash)
+		if mu != nil {
+			return mu, 0, true, e
+		}
+		return nil, 0, false, e
 	}
+	// END of extra functionality
 
 	v.behaviorFused = true
 
@@ -183,10 +188,14 @@ func (v *TimedUserValidator) GetAEAD(userHash []byte) (*protocol.MemoryUser, boo
 	v.RLock()
 	defer v.RUnlock()
 
-	mu, _, e := auth.VMessTimedUserValidatorGetAEAD(userHash)
-	if mu != nil {
-		return mu, true, e
+	// BEGIN of extra functionality
+	if auth.ExtraAuthenticationUsed() {
+		mu, _, e := auth.VMessTimedUserValidatorGetAEAD(userHash)
+		if mu != nil {
+			return mu, true, e
+		}
 	}
+	// END of extra functionality
 
 	var userHashFL [16]byte
 	copy(userHashFL[:], userHash)

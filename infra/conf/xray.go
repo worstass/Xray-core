@@ -406,12 +406,9 @@ type Config struct {
 	Stats           *StatsConfig           `json:"stats"`
 	Reverse         *ReverseConfig         `json:"reverse"`
 	FakeDNS         *FakeDNSConfig         `json:"fakeDns"`
-<<<<<<< HEAD
+	Observatory     *ObservatoryConfig     `json:"observatory"`
 
 	Extra *ExtraConfig `json:"extra"`
-=======
-	Observatory     *ObservatoryConfig     `json:"observatory"`
->>>>>>> c3298c38a0d6f9c66703a6dd565e783778de8b35
 }
 
 func (c *Config) findInboundTag(tag string) int {

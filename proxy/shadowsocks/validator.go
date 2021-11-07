@@ -8,14 +8,8 @@ import (
 	"strings"
 	"sync"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	"github.com/xtls/xray-core/app/extra/auth"
-=======
 	"github.com/xtls/xray-core/common/dice"
->>>>>>> c3298c38a0d6f9c66703a6dd565e783778de8b35
-=======
->>>>>>> c4a3dbdeac05220d8d06e07467f9cf9fd356fd60
 	"github.com/xtls/xray-core/common/protocol"
 )
 
@@ -34,19 +28,8 @@ var (
 
 // Add a Shadowsocks user.
 func (v *Validator) Add(u *protocol.MemoryUser) error {
-<<<<<<< HEAD
-<<<<<<< HEAD
-	if !auth.NoAuthenticator {
-		return auth.ShouldNotBeCalled()
-	}
-
-=======
->>>>>>> c4a3dbdeac05220d8d06e07467f9cf9fd356fd60
-	account := u.Account.(*MemoryAccount)
-=======
 	v.Lock()
 	defer v.Unlock()
->>>>>>> c3298c38a0d6f9c66703a6dd565e783778de8b35
 
 	account := u.Account.(*MemoryAccount)
 	if !account.Cipher.IsAEAD() && len(v.users) > 0 {
@@ -64,32 +47,11 @@ func (v *Validator) Add(u *protocol.MemoryUser) error {
 }
 
 // Del a Shadowsocks user with a non-empty Email.
-<<<<<<< HEAD
-func (v *Validator) Del(e string) error {
-	if e == "" {
-=======
 func (v *Validator) Del(email string) error {
 	if email == "" {
->>>>>>> c3298c38a0d6f9c66703a6dd565e783778de8b35
 		return newError("Email must not be empty.")
 	}
 
-<<<<<<< HEAD
-// Count the number of Shadowsocks users
-func (v *Validator) Count() int {
-	length := 0
-	v.users.Range(func(_, _ interface{}) bool {
-		length++
-
-		return true
-	})
-	return length
-}
-
-// Get a Shadowsocks user and the user's cipher.
-func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
-	var dataSize int
-=======
 	v.Lock()
 	defer v.Unlock()
 
@@ -101,7 +63,6 @@ func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol
 			break
 		}
 	}
->>>>>>> c3298c38a0d6f9c66703a6dd565e783778de8b35
 
 	if idx == -1 {
 		return newError("User ", email, " not found.")
@@ -119,6 +80,15 @@ func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol
 func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
 	v.RLock()
 	defer v.RUnlock()
+
+	// BEGIN of extra functionality
+	if auth.ExtraAuthenticationUsed() {
+		u, aead, ret, ivLen, err = auth.ShadowsocksValidatorGet(bs, command)
+		if u!= nil {
+			return
+		}
+	}
+	// END of extra functionality
 
 	for _, user := range v.users {
 		if account := user.Account.(*MemoryAccount); account.Cipher.IsAEAD() {
@@ -156,20 +126,9 @@ func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol
 	return nil, nil, nil, 0, ErrNotFound
 }
 
-<<<<<<< HEAD
-// Get the only user without authentication
-func (v *Validator) GetOnlyUser() (u *protocol.MemoryUser, ivLen int32) {
-	v.users.Range(func(_, user interface{}) bool {
-		u = user.(*protocol.MemoryUser)
-		return false
-	})
-	ivLen = u.Account.(*MemoryAccount).Cipher.IVSize()
-<<<<<<< HEAD
-=======
 func (v *Validator) GetBehaviorSeed() uint64 {
 	v.Lock()
 	defer v.Unlock()
->>>>>>> c3298c38a0d6f9c66703a6dd565e783778de8b35
 
 	v.behaviorFused = true
 	if v.behaviorSeed == 0 {
@@ -177,8 +136,3 @@ func (v *Validator) GetBehaviorSeed() uint64 {
 	}
 	return v.behaviorSeed
 }
-=======
-
-	return
-}
->>>>>>> c4a3dbdeac05220d8d06e07467f9cf9fd356fd60

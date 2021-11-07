@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/xtls/xray-core/common/errors"
+	"crypto/cipher"
 	"github.com/xtls/xray-core/common/protocol"
 	"github.com/xtls/xray-core/common/uuid"
 )
@@ -12,40 +12,15 @@ type Authenticator interface {
     VMessTimedUserValidatorGet(userHash []byte) (*protocol.MemoryUser, protocol.Timestamp, bool, error)
     VMessTimedUserValidatorGetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error)
 	VMessGetUser(email string) *protocol.MemoryUser
+	ShadowsocksValidatorGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error)
 }
 
-type NullAuthenticator struct {}
-
-func (a *NullAuthenticator) VMessTimedUserValidatorGet(userHash []byte) (*protocol.MemoryUser, protocol.Timestamp, bool, error) {
-	return nil, 0, false, nil
-}
-
-func (a *NullAuthenticator) VMessTimedUserValidatorGetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error) {
-	return nil, false, nil
-}
-
-func (a *NullAuthenticator) VMessGetUser(email string) *protocol.MemoryUser {
-	return nil
-}
-
-func (a *NullAuthenticator) VLessGet(id uuid.UUID) *protocol.MemoryUser {
-	return nil
-}
-
-func (a *NullAuthenticator) TrojanGet(hash string)  *protocol.MemoryUser {
-	return nil
-}
-
-var authenticator Authenticator = &NullAuthenticator{}
+var authenticator Authenticator
 
 func SetAuthenticator(a Authenticator)  {
 	authenticator = a
 }
 
-type errPathObjHolder struct{}
-
-func ShouldNotBeCalled() error {
-	err := errors.New("Should not be called")
-	err.WithPathObj(errPathObjHolder{}).AtDebug().WriteToLog()
-	return err
+func ExtraAuthenticationUsed() bool {
+	return authenticator != nil
 }
