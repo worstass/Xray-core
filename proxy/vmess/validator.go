@@ -3,6 +3,7 @@ package vmess
 import (
 	"crypto/hmac"
 	"crypto/sha256"
+	"github.com/xtls/xray-core/app/extra/auth"
 	"hash/crc64"
 	"strings"
 	"sync"
@@ -158,6 +159,11 @@ func (v *TimedUserValidator) Get(userHash []byte) (*protocol.MemoryUser, protoco
 	v.RLock()
 	defer v.RUnlock()
 
+	mu, _, _, e := auth.VMessTimedUserValidatorGet(userHash)
+	if mu != nil {
+		return mu, 0, true, e
+	}
+
 	v.behaviorFused = true
 
 	var fixedSizeHash [16]byte
@@ -176,6 +182,11 @@ func (v *TimedUserValidator) Get(userHash []byte) (*protocol.MemoryUser, protoco
 func (v *TimedUserValidator) GetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error) {
 	v.RLock()
 	defer v.RUnlock()
+
+	mu, _, e := auth.VMessTimedUserValidatorGetAEAD(userHash)
+	if mu != nil {
+		return mu, true, e
+	}
 
 	var userHashFL [16]byte
 	copy(userHashFL[:], userHash)

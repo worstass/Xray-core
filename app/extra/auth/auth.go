@@ -1,44 +1,45 @@
 package auth
 
 import (
-	"crypto/cipher"
 	"github.com/xtls/xray-core/common/errors"
 	"github.com/xtls/xray-core/common/protocol"
 	"github.com/xtls/xray-core/common/uuid"
 )
 
-var NoAuthenticator = true
-
 type Authenticator interface {
-	VMessGetUser(email string) *protocol.MemoryUser
 	VLessGet(id uuid.UUID) *protocol.MemoryUser
 	TrojanGet(hash string)  *protocol.MemoryUser
-	ShadowsocksGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error)
+    VMessTimedUserValidatorGet(userHash []byte) (*protocol.MemoryUser, protocol.Timestamp, bool, error)
+    VMessTimedUserValidatorGetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error)
+	VMessGetUser(email string) *protocol.MemoryUser
 }
 
-//type NullAuthenticator struct {}
-//
-//func (a *NullAuthenticator) ShadowsocksGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
-//	return nil, nil, nil, 0, err
-//}
-//
-//func (a *NullAuthenticator) VMessGetUser(email string) *protocol.MemoryUser {
-//	return nil
-//}
-//
-//func (a *NullAuthenticator) VLessGet(id uuid.UUID) *protocol.MemoryUser {
-//	return nil
-//}
-//
-//func (a *NullAuthenticator) TrojanGet(hash string)  *protocol.MemoryUser {
-//	return nil
-//}
+type NullAuthenticator struct {}
 
-var authenticator Authenticator //= &NullAuthenticator{}
+func (a *NullAuthenticator) VMessTimedUserValidatorGet(userHash []byte) (*protocol.MemoryUser, protocol.Timestamp, bool, error) {
+	return nil, 0, false, nil
+}
+
+func (a *NullAuthenticator) VMessTimedUserValidatorGetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error) {
+	return nil, false, nil
+}
+
+func (a *NullAuthenticator) VMessGetUser(email string) *protocol.MemoryUser {
+	return nil
+}
+
+func (a *NullAuthenticator) VLessGet(id uuid.UUID) *protocol.MemoryUser {
+	return nil
+}
+
+func (a *NullAuthenticator) TrojanGet(hash string)  *protocol.MemoryUser {
+	return nil
+}
+
+var authenticator Authenticator = &NullAuthenticator{}
 
 func SetAuthenticator(a Authenticator)  {
 	authenticator = a
-	NoAuthenticator = false
 }
 
 type errPathObjHolder struct{}

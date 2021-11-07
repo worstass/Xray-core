@@ -9,10 +9,13 @@ import (
 	"sync"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	"github.com/xtls/xray-core/app/extra/auth"
 =======
 	"github.com/xtls/xray-core/common/dice"
 >>>>>>> c3298c38a0d6f9c66703a6dd565e783778de8b35
+=======
+>>>>>>> c4a3dbdeac05220d8d06e07467f9cf9fd356fd60
 	"github.com/xtls/xray-core/common/protocol"
 )
 
@@ -32,10 +35,13 @@ var (
 // Add a Shadowsocks user.
 func (v *Validator) Add(u *protocol.MemoryUser) error {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if !auth.NoAuthenticator {
 		return auth.ShouldNotBeCalled()
 	}
 
+=======
+>>>>>>> c4a3dbdeac05220d8d06e07467f9cf9fd356fd60
 	account := u.Account.(*MemoryAccount)
 =======
 	v.Lock()
@@ -60,10 +66,6 @@ func (v *Validator) Add(u *protocol.MemoryUser) error {
 // Del a Shadowsocks user with a non-empty Email.
 <<<<<<< HEAD
 func (v *Validator) Del(e string) error {
-	if !auth.NoAuthenticator {
-		return auth.ShouldNotBeCalled()
-	}
-
 	if e == "" {
 =======
 func (v *Validator) Del(email string) error {
@@ -75,10 +77,6 @@ func (v *Validator) Del(email string) error {
 <<<<<<< HEAD
 // Count the number of Shadowsocks users
 func (v *Validator) Count() int {
-	if !auth.NoAuthenticator {
-		return 2 // > 1
-	}
-
 	length := 0
 	v.users.Range(func(_, _ interface{}) bool {
 		length++
@@ -90,10 +88,6 @@ func (v *Validator) Count() int {
 
 // Get a Shadowsocks user and the user's cipher.
 func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
-	if !auth.NoAuthenticator {
-		return auth.ShadowsocksGet(bs, command)
-	}
-
 	var dataSize int
 =======
 	v.Lock()
@@ -165,16 +159,12 @@ func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol
 <<<<<<< HEAD
 // Get the only user without authentication
 func (v *Validator) GetOnlyUser() (u *protocol.MemoryUser, ivLen int32) {
-	if !auth.NoAuthenticator {
-		auth.ShouldNotBeCalled()
-		return nil, 0
-	}
-
 	v.users.Range(func(_, user interface{}) bool {
 		u = user.(*protocol.MemoryUser)
 		return false
 	})
 	ivLen = u.Account.(*MemoryAccount).Cipher.IVSize()
+<<<<<<< HEAD
 =======
 func (v *Validator) GetBehaviorSeed() uint64 {
 	v.Lock()
@@ -187,3 +177,8 @@ func (v *Validator) GetBehaviorSeed() uint64 {
 	}
 	return v.behaviorSeed
 }
+=======
+
+	return
+}
+>>>>>>> c4a3dbdeac05220d8d06e07467f9cf9fd356fd60

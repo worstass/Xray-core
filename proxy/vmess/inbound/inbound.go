@@ -10,11 +10,14 @@ import (
 	"time"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	"github.com/xtls/xray-core/app/extra/auth"
 =======
 	"github.com/xtls/xray-core/transport/internet/stat"
 
 >>>>>>> c3298c38a0d6f9c66703a6dd565e783778de8b35
+=======
+>>>>>>> c4a3dbdeac05220d8d06e07467f9cf9fd356fd60
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/buf"
 	"github.com/xtls/xray-core/common/errors"
@@ -161,9 +164,11 @@ func (*Handler) Network() []net.Network {
 }
 
 func (h *Handler) GetUser(email string) *protocol.MemoryUser {
-	if !auth.NoAuthenticator {
-		return auth.VMessGetUser(email)
-	}
+	//u := auth.VMessGetUser(email)
+	//if u != nil {
+	//	return u
+	//}
+
 	user, existing := h.usersByEmail.Get(email)
 	if !existing {
 		h.clients.Add(user)
@@ -172,10 +177,6 @@ func (h *Handler) GetUser(email string) *protocol.MemoryUser {
 }
 
 func (h *Handler) AddUser(ctx context.Context, user *protocol.MemoryUser) error {
-	if !auth.NoAuthenticator {
-		return auth.ShouldNotBeCalled()
-	}
-
 	if len(user.Email) > 0 && !h.usersByEmail.Add(user) {
 		return newError("User ", user.Email, " already exists.")
 	}
@@ -183,9 +184,6 @@ func (h *Handler) AddUser(ctx context.Context, user *protocol.MemoryUser) error 
 }
 
 func (h *Handler) RemoveUser(ctx context.Context, email string) error {
-	if !auth.NoAuthenticator {
-		return auth.ShouldNotBeCalled()
-	}
 	if email == "" {
 		return newError("Email must not be empty.")
 	}
