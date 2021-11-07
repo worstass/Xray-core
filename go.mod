@@ -3,7 +3,7 @@ module github.com/xtls/xray-core
 go 1.17
 
 require (
-	github.com/caddyserver/certmagic v0.14.0
+	github.com/caddyserver/certmagic v0.15.1
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32
 	github.com/golang/mock v1.6.0
 	github.com/golang/protobuf v1.5.2
@@ -19,6 +19,7 @@ require (
 	github.com/v2fly/ss-bloomring v0.0.0-20210312155135-28617310f63e
 	github.com/xtls/go v0.0.0-20210920065950-d4af136d3672
 	go.starlark.net v0.0.0-20211013185944-b0039bd2cfe3
+	go.uber.org/zap v1.17.0
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/net v0.0.0-20211020060615-d418f374d309
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
@@ -34,12 +35,17 @@ require (
 	github.com/dgryski/go-metro v0.0.0-20211015221634-2661b20a2446 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.6 // indirect
+	github.com/libdns/libdns v0.2.1 // indirect
 	github.com/marten-seemann/qtls-go1-16 v0.1.4 // indirect
 	github.com/marten-seemann/qtls-go1-17 v0.1.0 // indirect
+	github.com/mholt/acmez v1.0.0 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/mod v0.5.1 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.7 // indirect
