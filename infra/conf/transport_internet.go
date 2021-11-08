@@ -1,12 +1,9 @@
 package conf
 
 import (
-	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/caddyserver/certmagic"
-	"github.com/xtls/xray-core/app/extra"
 	"math"
 	"net/url"
 	"strconv"
@@ -321,8 +318,7 @@ func (c *TLSCertConfig) Build() (*tls.Certificate, error) {
 		certificate.Key = key
 		certificate.KeyPath = c.KeyFile
 	}
-	println(string(certificate.Certificate))
-	println(string(certificate.Key))
+
 	switch strings.ToLower(c.Usage) {
 	case "encipherment":
 		certificate.Usage = tls.Certificate_ENCIPHERMENT
@@ -339,30 +335,6 @@ func (c *TLSCertConfig) Build() (*tls.Certificate, error) {
 		certificate.OneTimeLoading = c.OneTimeLoading
 	}
 	certificate.OcspStapling = c.OcspStapling
-
-	return certificate, nil
-}
-
-func CreateCertFromFromCertMagic(domain string) (*tls.Certificate, error) {
-	certificate := new(tls.Certificate)
-	cmConfig := certmagic.Default
-	err := extra.PrepareCertForDomains(context.Background(), []string{domain}, false)
-	if err != nil {
-		return nil, newError(fmt.Sprintf("failed to get cert from certmagic for %s", domain)).Base(err)
-	}
-	cert, err := cmConfig.CacheManagedCertificate(domain)
-	if err != nil {
-		return nil, newError("failed to load cert from certmagic storage").Base(err)
-	}
-	certificate.Certificate = cert.Certificate.Leaf.Raw
-	k, err := extra.PrivateKeyToBytes(cert.PrivateKey)
-	if err != nil {
-		return nil, newError("failed to convert to key from certmagic storage").Base(err)
-	}
-	certificate.Key = k
-	certificate.Usage = tls.Certificate_ENCIPHERMENT
-	certificate.OneTimeLoading = false
-	certificate.OcspStapling = 3600
 
 	return certificate, nil
 }
@@ -398,12 +370,17 @@ func (c *TLSConfig) Build() (proto.Message, error) {
 	config.AllowInsecure = c.Insecure
 	if len(c.ServerName) > 0 {
 		config.ServerName = serverName
+		// BEGIN of extra
 		if len(config.Certificate) == 0 {
 			cert, err := CreateCertFromFromCertMagic(serverName)
 			if err == nil {
+				newError("got certs for ", serverName, " using CertMagic").AtInfo().WriteToLog()
 				config.Certificate = append(config.Certificate, cert)
+			} else {
+				newError(fmt.Sprintf("can't get certs for %s using CertMagic: %s", serverName, err)).AtError().WriteToLog()
 			}
 		}
+		// END of extra
 	}
 	if c.ALPN != nil && len(*c.ALPN) > 0 {
 		config.NextProtocol = []string(*c.ALPN)
