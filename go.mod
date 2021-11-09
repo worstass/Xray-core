@@ -50,10 +50,10 @@ require (
 )
 
 require (
-	github.com/caddyserver/certmagic v0.15.1
-	github.com/klauspost/cpuid/v2 v2.0.6 // indirect
+	github.com/caddyserver/certmagic v0.15.2
+	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/libdns/libdns v0.2.1 // indirect
-	github.com/mholt/acmez v1.0.0 // indirect
+	github.com/mholt/acmez v1.0.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.17.0
