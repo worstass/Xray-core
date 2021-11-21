@@ -23,7 +23,8 @@ import (
 	"github.com/xtls/xray-core/features/stats"
 	"github.com/xtls/xray-core/transport"
 	"github.com/xtls/xray-core/transport/pipe"
-	"github.com/xtls/xray-core/app/extra/limit"
+
+	"github.com/xtls/xray-core/app/extra/limit" // extra added
 )
 
 var errSniffingTimeout = newError("timeout on sniffing")
@@ -174,8 +175,11 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 				}
 			}
 		}
-		limit.LimitSpeed(user, inboundLink, outboundLink)
 	}
+
+	// BEGIN of extra
+	limit.LimitSpeed(ctx, inboundLink, outboundLink)
+	// END of extra
 
 	return inboundLink, outboundLink
 }
