@@ -10,9 +10,13 @@ option java_multiple_files = true;
 message Config {
   string domain = 1;
   string spineAddress = 2;
-  string panelAddress = 3;
-  string authenticator = 4;
-  string accessToken = 5;
-  string secretKey = 6;
+  string authenticator = 3;
+  string accessToken = 4;
+  PanelConfig panel = 5;
+}
 
+message PanelConfig {
+  string baseUrl = 1;
+  uint32 nodeId = 2;
+  string secretKey = 3;
 }

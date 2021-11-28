@@ -15,6 +15,13 @@ type ExtraConfig struct {
 	SpineAddress string `json:"spineAddress"`
 	Authenticator string `json:"authenticator"`
 	AccessToken string `json:"accessToken"`
+	Panel PanelConfig `json:"panel"`
+}
+
+type PanelConfig struct {
+	BaseUrl string `json:"baseUrl"`
+	NodeId uint32  `json:"NodeId"`
+	SecretKey  string `json:"secretKey"`
 }
 
 func (c *ExtraConfig) Build() (proto.Message, error) {
@@ -23,6 +30,11 @@ func (c *ExtraConfig) Build() (proto.Message, error) {
 		SpineAddress: c.SpineAddress,
 		Authenticator: c.Authenticator,
 		AccessToken: c.AccessToken,
+		Panel: &extra.PanelConfig{
+			BaseUrl: c.Panel.BaseUrl,
+			NodeId: c.Panel.NodeId,
+			SecretKey: c.Panel.SecretKey,
+		},
 	}, nil
 }
 
