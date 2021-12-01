@@ -417,7 +417,9 @@ type Config struct {
 	FakeDNS         *FakeDNSConfig         `json:"fakeDns"`
 	Observatory     *ObservatoryConfig     `json:"observatory"`
 
+	// BEGIN of extra
 	Extra *ExtraConfig `json:"extra"`
+	// END of extra
 }
 
 func (c *Config) findInboundTag(tag string) int {
