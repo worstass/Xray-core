@@ -178,7 +178,7 @@ func (d *DefaultDispatcher) getLink(ctx context.Context) (*transport.Link, *tran
 	}
 
 	// BEGIN of extra
-	limit.LimitSpeed(ctx, inboundLink, outboundLink)
+	limit.Limit(ctx, inboundLink, outboundLink)
 	// END of extra
 
 	return inboundLink, outboundLink
