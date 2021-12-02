@@ -4,6 +4,7 @@ package dispatcher
 
 import (
 	"context"
+	"fmt"
 	"github.com/xtls/xray-core/features/dns"
 	"strings"
 	"sync"
@@ -25,6 +26,8 @@ import (
 	"github.com/xtls/xray-core/transport/pipe"
 
 	"github.com/xtls/xray-core/app/extra/limit" // extra added
+	"github.com/xtls/xray-core/app/extra/rule" // extra added
+
 )
 
 var errSniffingTimeout = newError("timeout on sniffing")
@@ -402,6 +405,17 @@ func (d *DefaultDispatcher) routedDispatch(ctx context.Context, link *transport.
 			}
 		}
 	}
+
+	// BEGIN of extra
+	sessionInbound := session.InboundFromContext(ctx)
+	if rule.Detect(ctx) {
+		newError(fmt.Sprintf("User %s access %s reject by rule", sessionInbound.User.Email, destination.String())).AtError().WriteToLog()
+		newError("destination is reject by rule")
+		common.Close(link.Writer)
+		common.Interrupt(link.Reader)
+		return
+	}
+	// END of extra
 
 	var handler outbound.Handler
 
