@@ -34,10 +34,8 @@ func PrivateKeyToBytes(p crypto.PrivateKey) ([]byte, error) {
 			return nil, errors.New("failed to encode key in Pem format")
 		}
 		return buf.Bytes(), nil
-
 	case *ecdsa.PrivateKey:
 		return nil, errors.New("ecdsa.PrivateKey unimplemented")
-
 	case ed25519.PrivateKey:
 		return nil, errors.New("ecdsa.PrivateKey unimplemented")
 	default:
@@ -45,7 +43,7 @@ func PrivateKeyToBytes(p crypto.PrivateKey) ([]byte, error) {
 	}
 }
 
-func PrepareCertForDomains(ctx context.Context, domains []string, testing bool) error {
+func PrepareCertForDomains(ctx context.Context, domains []string, testing bool, autoPort bool) error {
 	certmagic.DefaultACME.Agreed = true
 	certmagic.DefaultACME.Email = "autoreply@yarx.com"
 	if testing {
@@ -69,7 +67,14 @@ func PrepareCertForDomains(ctx context.Context, domains []string, testing bool) 
 				fmt.Fprintf(w, "HTTPChallengeHandler Ok!")
 			})),
 	}
-	hln, err := net.Listen("tcp", fmt.Sprintf(":%d", 80))
+	if autoPort {
+		port, err := getFreePort()
+		if err != nil {
+			return err
+		}
+		certmagic.HTTPPort = port
+	}
+	hln, err := net.Listen("tcp", fmt.Sprintf(":%d", certmagic.HTTPPort))
 	if err != nil {
 		return err
 	}
@@ -78,8 +83,8 @@ func PrepareCertForDomains(ctx context.Context, domains []string, testing bool) 
 	return cfg.ManageSync(ctx, domains)
 }
 
-func AutoGetCertForDomain(ctx context.Context, domain string, testing bool) (*tls.Certificate, error) {
-	err := PrepareCertForDomains(ctx, []string{domain}, testing)
+func AutoGetCertForDomain(ctx context.Context, domain string, testing bool, autoPort bool) (*tls.Certificate, error) {
+	err := PrepareCertForDomains(ctx, []string{domain}, testing, autoPort)
 	if err != nil {
 		return nil, err
 	}
@@ -88,4 +93,18 @@ func AutoGetCertForDomain(ctx context.Context, domain string, testing bool) (*tl
 		return nil, err
 	}
 	return &cert.Certificate, nil
+}
+
+func getFreePort() (int, error) {
+	addr, err := net.ResolveTCPAddr("tcp", "localhost:0")
+	if err != nil {
+		return 0, err
+	}
+
+	l, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		return 0, err
+	}
+	defer l.Close()
+	return l.Addr().(*net.TCPAddr).Port, nil
 }

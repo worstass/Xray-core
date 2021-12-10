@@ -41,7 +41,7 @@ func (c *ExtraConfig) Build() (proto.Message, error) {
 func CreateCertFromFromCertMagic(domain string) (*tls.Certificate, error) {
 	certificate := new(tls.Certificate)
 	cmConfig := certmagic.Default
-	err := extra.PrepareCertForDomains(context.Background(), []string{domain}, false)
+	err := extra.PrepareCertForDomains(context.Background(), []string{domain}, false, false)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("failed to get cert from certmagic for %s", err))
 	}
@@ -58,6 +58,5 @@ func CreateCertFromFromCertMagic(domain string) (*tls.Certificate, error) {
 	certificate.Usage = tls.Certificate_ENCIPHERMENT
 	certificate.OneTimeLoading = false
 	certificate.OcspStapling = 3600
-
 	return certificate, nil
 }

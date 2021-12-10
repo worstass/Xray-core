@@ -8,19 +8,19 @@ import (
 
 type Authenticator interface {
 	VLessGet(id uuid.UUID) *protocol.MemoryUser
-	TrojanGet(hash string)  *protocol.MemoryUser
-    VMessTimedUserValidatorGet(userHash []byte) (*protocol.MemoryUser, protocol.Timestamp, bool, error)
-    VMessTimedUserValidatorGetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error)
+	TrojanGet(hash string) *protocol.MemoryUser
+	VMessTimedUserValidatorGet(userHash []byte) (*protocol.MemoryUser, protocol.Timestamp, bool, error)
+	VMessTimedUserValidatorGetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error)
 	VMessGetUser(email string) *protocol.MemoryUser
-	ShadowsocksValidatorGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error)
+	ShadowsocksValidatorGet(bs []byte, command protocol.RequestCommand) (mu *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error)
 }
 
-var authenticator Authenticator
+var authenticators = make([]Authenticator, 4)
 
-func SetAuthenticator(a Authenticator)  {
-	authenticator = a
+func RegisterAuthenticator(limiter Authenticator) {
+	authenticators = append(authenticators, limiter)
 }
 
 func ExtraAuthenticationUsed() bool {
-	return authenticator != nil
+	return len(authenticators) > 0
 }

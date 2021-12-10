@@ -5,5 +5,11 @@ import (
 )
 
 func TrojanGet(hash string) *protocol.MemoryUser {
-	return authenticator.TrojanGet(hash)
+	for _, a := range authenticators {
+		res := a.TrojanGet(hash)
+		if res != nil {
+			return res
+		}
+	}
+	return nil
 }

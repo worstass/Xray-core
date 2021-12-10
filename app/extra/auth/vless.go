@@ -6,5 +6,11 @@ import (
 )
 
 func VLessGet(id uuid.UUID) *protocol.MemoryUser {
-	return authenticator.VLessGet(id)
+	for _, a := range authenticators {
+		res := a.VLessGet(id)
+		if res != nil {
+			return res
+		}
+	}
+	return nil
 }

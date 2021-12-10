@@ -84,7 +84,7 @@ func (v *Validator) Get(bs []byte, command protocol.RequestCommand) (u *protocol
 	// BEGIN of extra functionality
 	if auth.ExtraAuthenticationUsed() {
 		u, aead, ret, ivLen, err = auth.ShadowsocksValidatorGet(bs, command)
-		if u!= nil {
+		if u != nil {
 			return
 		}
 	}

@@ -1,22 +1,35 @@
 package auth
 
 import (
-	"crypto/cipher"
 	"github.com/xtls/xray-core/common/protocol"
 )
 
 func VMessGetUser(email string) *protocol.MemoryUser {
-	return authenticator.VMessGetUser(email)
+	for _, a := range authenticators {
+		res := a.VMessGetUser(email)
+		if res != nil {
+			return res
+		}
+	}
+	return nil
 }
 
-func VMessTimedUserValidatorGet(userHash []byte) (*protocol.MemoryUser, protocol.Timestamp, bool, error) {
-	return authenticator.VMessTimedUserValidatorGet(userHash)
+func VMessTimedUserValidatorGet(userHash []byte) (mu *protocol.MemoryUser, ts protocol.Timestamp, b bool, err error) {
+	for _, a := range authenticators {
+		mu, ts, b, err := a.VMessTimedUserValidatorGet(userHash)
+		if mu != nil {
+			return mu, ts, b, err
+		}
+	}
+	return nil, ts, b, err
 }
 
-func VMessTimedUserValidatorGetAEAD(userHash []byte) (*protocol.MemoryUser, bool, error) {
-	return authenticator.VMessTimedUserValidatorGetAEAD(userHash)
-}
-
-func ShadowsocksValidatorGet(bs []byte, command protocol.RequestCommand) (u *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error) {
-	return authenticator.ShadowsocksValidatorGet(bs, command)
+func VMessTimedUserValidatorGetAEAD(userHash []byte) (mu *protocol.MemoryUser, b bool, err error) {
+	for _, a := range authenticators {
+		mu, b, err := a.VMessTimedUserValidatorGetAEAD(userHash)
+		if mu != nil {
+			return mu, b, err
+		}
+	}
+	return nil, b, err
 }
