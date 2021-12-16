@@ -5,7 +5,6 @@ package dispatcher
 import (
 	"context"
 	"fmt"
-	"github.com/xtls/xray-core/features/dns"
 	"strings"
 	"sync"
 	"time"
@@ -17,6 +16,7 @@ import (
 	"github.com/xtls/xray-core/common/protocol"
 	"github.com/xtls/xray-core/common/session"
 	"github.com/xtls/xray-core/core"
+	"github.com/xtls/xray-core/features/dns"
 	"github.com/xtls/xray-core/features/outbound"
 	"github.com/xtls/xray-core/features/policy"
 	"github.com/xtls/xray-core/features/routing"
@@ -26,8 +26,7 @@ import (
 	"github.com/xtls/xray-core/transport/pipe"
 
 	"github.com/xtls/xray-core/app/extra/limit" // extra added
-	"github.com/xtls/xray-core/app/extra/rule" // extra added
-
+	"github.com/xtls/xray-core/app/extra/rule"  // extra added
 )
 
 var errSniffingTimeout = newError("timeout on sniffing")
