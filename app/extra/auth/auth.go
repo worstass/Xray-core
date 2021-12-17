@@ -15,7 +15,7 @@ type Authenticator interface {
 	ShadowsocksValidatorGet(bs []byte, command protocol.RequestCommand) (mu *protocol.MemoryUser, aead cipher.AEAD, ret []byte, ivLen int32, err error)
 }
 
-var authenticators = make([]Authenticator, 4)
+var authenticators []Authenticator //= make([]Authenticator, 4)
 
 func RegisterAuthenticator(a Authenticator) {
 	authenticators = append(authenticators, a)
@@ -23,4 +23,8 @@ func RegisterAuthenticator(a Authenticator) {
 
 func ExtraAuthenticationUsed() bool {
 	return len(authenticators) > 0
+}
+
+func Reset() {
+	authenticators = make([]Authenticator, 4)
 }
