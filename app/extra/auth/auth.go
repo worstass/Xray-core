@@ -17,8 +17,8 @@ type Authenticator interface {
 
 var authenticators = make([]Authenticator, 4)
 
-func RegisterAuthenticator(limiter Authenticator) {
-	authenticators = append(authenticators, limiter)
+func RegisterAuthenticator(a Authenticator) {
+	authenticators = append(authenticators, a)
 }
 
 func ExtraAuthenticationUsed() bool {
