@@ -26,5 +26,5 @@ func ExtraAuthenticationUsed() bool {
 }
 
 func Reset() {
-	authenticators = make([]Authenticator, 4)
+	authenticators = make([]Authenticator, 0, 4)
 }
