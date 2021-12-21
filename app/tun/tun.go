@@ -5,42 +5,56 @@ import (
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/net"
 	"github.com/xtls/xray-core/core"
+	"tuntap/pkg/core/engine"
 )
 
 type Tunnel struct {
+	config *Config
+	ctx    context.Context
+	e      *engine.Engine
 }
 
-// Start implements common.Runnable.
-func (*Tunnel) Start() error {
-	return nil
+func (t *Tunnel) Start() error {
+	return t.e.Start()
 }
 
-// Close implements common.Closable.
-func (*Tunnel) Close() error {
-	return nil
+func (t *Tunnel) Close() error {
+	return t.e.Close()
 }
 
-// Type implement common.HasType.
 func (*Tunnel) Type() interface{} {
 	return (*Tunnel)(nil)
 }
 
-func tcpHander(conn net.Conn) (net.Conn, error) {
-	return nil, nil
+func tcpHander(conn net.TCPConn) {
 }
-func dialTCP(ctx context.Context, net.Conn, addr *net.TCPAddr) error {
+
+func udpHander(conn net.UDPConn) {
+}
+
+func dialTCP(ctx context.Context, conn net.Conn, addr *net.TCPAddr) error {
+	lhs := conn
 	target := net.DestinationFromAddr(addr)
 	i := core.MustFromContext(ctx)
-	conn, err := core.Dial(ctx, i, target)
+	rhs, err := core.Dial(ctx, i, target)
+
+	return nil
 }
+
+func New(ctx context.Context, config *Config) (*Tunnel, error) {
+	e, err := engine.New(tcpHander, udpHander)
+	if err != nil {
+		return nil, err
+	}
+	return &Tunnel{
+		config: config,
+		ctx:    ctx,
+		e:      e,
+	}, nil
+}
+
 func init() {
 	common.Must(common.RegisterConfig((*Config)(nil), func(ctx context.Context, config interface{}) (interface{}, error) {
-		t := new(Tunnel)
-		//if err := core.RequireFeatures(ctx, func(d dns.Client, ohm outbound.Manager) error {
-		//	return r.Init(ctx, config.(*Config), d, ohm)
-		//}); err != nil {
-		//	return nil, err
-		//}
-		return t, nil
+		return New(ctx, config.(*Config))
 	}))
 }

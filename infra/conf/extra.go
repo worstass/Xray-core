@@ -1,3 +1,5 @@
+// BEGIN of extra
+
 package conf
 
 import (

@@ -418,6 +418,7 @@ type Config struct {
 
 	// BEGIN of extra
 	Extra *ExtraConfig `json:"extra"`
+	Tun *TunConfig     `json:"tun"`
 	// END of extra
 }
 
@@ -585,6 +586,14 @@ func (c *Config) Build() (*core.Config, error) {
 			return nil, err
 		}
 		config.App = append(config.App, serial.ToTypedMessage(extraConf))
+	}
+
+	if c.Tun !=nil {
+		tunConf, err := c.Tun.Build()
+		if err != nil {
+			return nil, err
+		}
+		config.App = append(config.App, serial.ToTypedMessage(tunConf))
 	}
 
 	var logConfMsg *serial.TypedMessage
