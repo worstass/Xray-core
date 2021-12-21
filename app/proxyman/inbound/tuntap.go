@@ -5,6 +5,8 @@ package inbound
 import (
 	"github.com/xtls/xray-core/common/net"
 	"github.com/xtls/xray-core/proxy"
+
+	"tuntap/pkg/core/engine"
 )
 
 type TuntapInboundHandler struct {
@@ -12,6 +14,14 @@ type TuntapInboundHandler struct {
 }
 
 func (h *TuntapInboundHandler) Start() error {
+	e, err := engine.New(func(conn net.TCPConn) {
+
+	}, func(conn net.UDPConn) {
+
+	}, )
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

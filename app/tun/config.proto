@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package xray.app.tun;
+option go_package = "app/tun";
+//option go_package = "github.com/xtls/xray-core/app/tun";
+option csharp_namespace = "Xray.App.Tun";
+option java_package = "com.xray.app.tun";
+option java_multiple_files = true;
+
+message Config {
+}
