@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/xtls/xray-core/common"
 	"github.com/xtls/xray-core/common/net"
-	"github.com/xtls/xray-core/core"
 	"tuntap/pkg/core/engine"
 )
 
@@ -33,10 +32,10 @@ func udpHander(conn net.UDPConn) {
 }
 
 func dialTCP(ctx context.Context, conn net.Conn, addr *net.TCPAddr) error {
-	lhs := conn
-	target := net.DestinationFromAddr(addr)
-	i := core.MustFromContext(ctx)
-	rhs, err := core.Dial(ctx, i, target)
+	//lhs := conn
+	//target := net.DestinationFromAddr(addr)
+	//i := core.MustFromContext(ctx)
+	//rhs, err := core.Dial(ctx, i, target)
 
 	return nil
 }
