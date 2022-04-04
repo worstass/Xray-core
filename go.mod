@@ -9,7 +9,7 @@ require (
 	github.com/google/go-cmp v0.5.6
 	github.com/gorilla/websocket v1.4.2
 	github.com/lucas-clemente/quic-go v0.24.0
-	github.com/miekg/dns v1.1.43
+	github.com/miekg/dns v1.1.48
 	github.com/pelletier/go-toml v1.9.4
 	github.com/pires/go-proxyproto v0.6.1
 	github.com/refraction-networking/utls v1.0.0
@@ -51,17 +51,17 @@ require (
 
 require (
 	github.com/caddyserver/certmagic v0.15.1
+	github.com/google/btree v1.0.1 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.6 // indirect
 	github.com/libdns/libdns v0.2.1 // indirect
 	github.com/mholt/acmez v1.0.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.17.0
-	gvisor.dev/gvisor v0.0.0-20211221012133-57a4317a8762 // indirect
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
-	github.com/google/btree v1.0.1 // indirect
-    golang.zx2c4.com/wintun v0.0.0-20211104114900-415007cec224 // indirect
-    golang.zx2c4.com/wireguard v0.0.0-20211209221555-9c9e7e272434 // indirect
+	golang.zx2c4.com/wintun v0.0.0-20211104114900-415007cec224 // indirect
+	golang.zx2c4.com/wireguard v0.0.0-20211209221555-9c9e7e272434 // indirect
+	gvisor.dev/gvisor v0.0.0-20211221012133-57a4317a8762 // indirect
 	tuntap v0.0.0
 )
 
