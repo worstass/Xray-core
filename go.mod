@@ -46,22 +46,22 @@ require (
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 require (
 	github.com/caddyserver/certmagic v0.15.1
+	github.com/google/btree v1.0.1 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.6 // indirect
 	github.com/libdns/libdns v0.2.1 // indirect
 	github.com/mholt/acmez v1.0.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.17.0
-	gvisor.dev/gvisor v0.0.0-20211221012133-57a4317a8762 // indirect
+	go.uber.org/zap v1.22.0
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
-	github.com/google/btree v1.0.1 // indirect
-    golang.zx2c4.com/wintun v0.0.0-20211104114900-415007cec224 // indirect
-    golang.zx2c4.com/wireguard v0.0.0-20211209221555-9c9e7e272434 // indirect
+	golang.zx2c4.com/wintun v0.0.0-20211104114900-415007cec224 // indirect
+	golang.zx2c4.com/wireguard v0.0.0-20211209221555-9c9e7e272434 // indirect
+	gvisor.dev/gvisor v0.0.0-20211221012133-57a4317a8762 // indirect
 	tuntap v0.0.0
 )
 
